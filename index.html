@@ -9,12 +9,11 @@
 
 <style>
 :root{
-/* ปรับโทนสีเป็น ม่วง-ชมพู พาสเทล ตามบรีฟลูกค้า */
 --bg:#F3E5F5;
 --main:#CE93D8;
 --dark:#8E24AA;
 --white:#FFFFFF;
---glow:rgba(206,147,216,0.5); /* เพิ่มความเข้มแสงฟุ้งนิดหน่อย */
+--glow:rgba(206,147,216,0.5);
 }
 
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Mitr',sans-serif;}
@@ -24,29 +23,48 @@ background:var(--bg);
 display:flex;
 justify-content:center;
 position: relative;
-overflow-x: hidden; /* ป้องกันอิโมจิล้นจอทิศทางแนวนอน */
+overflow-x: hidden;
+min-height: 100vh;
 }
 
-/* --- NEW: พื้นหลังฟุ้งๆ (Background Floating Emojis) --- */
-/* สร้างเลเยอร์อิโมจิลอยละล่องจางๆ ทั่วหน้าเว็บ */
-body::before {
-content: '🐇 🌷 🍎 🐇 🌷 🍎 🐇 🌷 🍎';
-position: fixed;
-top: -10%; left: 0; width: 100%; height: 120%;
-font-size: 24px;
-color: rgba(0,0,0,0.1); /* ปรับสีให้จางมากๆ */
-display: flex;
-flex-wrap: wrap;
-justify-content: space-around;
-align-content: space-around;
-opacity: 0.2; /* ความโปร่งใสโดยรวม */
-z-index: -1; /* อยู่หลังเนื้อหาทั้งหมด */
-animation: floatBackground 25s linear infinite;
+/* --- BACKGROUND: กระจายอิโมจิทั่วหน้าจอ --- */
+.bg-emojis {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
 }
 
-@keyframes floatBackground {
-0% { transform: translateY(0); }
-100% { transform: translateY(-100px); } /* ลอยขึ้นช้าๆ */
+.bg-item {
+    position: absolute;
+    font-size: 20px;
+    opacity: 0.2;
+    animation: floatMove 15s infinite linear;
+}
+
+@keyframes floatMove {
+    0% { transform: translateY(100vh) rotate(0deg); }
+    100% { transform: translateY(-10vh) rotate(360deg); }
+}
+
+/* --- LOGO: ออร่าเรืองแสงฟุ้งๆ --- */
+.logo {
+    width:150px;height:150px;
+    border-radius:50%;
+    overflow:hidden;
+    margin:0 auto 20px;
+    border: 4px solid #fff;
+    box-shadow: 
+        0 0 20px var(--glow),
+        0 0 40px rgba(255,255,255,0.8),
+        0 0 60px var(--main);
+    animation: auraGlow 4s infinite alternate ease-in-out;
+}
+
+@keyframes auraGlow {
+    from { box-shadow: 0 0 20px var(--glow), 0 0 40px rgba(255,255,255,0.6); transform: scale(1); }
+    to { box-shadow: 0 0 40px var(--main), 0 0 70px rgba(255,255,255,0.9); transform: scale(1.03); }
 }
 
 .container{
@@ -54,7 +72,7 @@ max-width:500px;
 width:100%;
 padding:20px 15px 40px;
 position: relative;
-z-index: 1; /* อยู่หน้าอิโมจิพื้นหลัง */
+z-index: 1;
 }
 
 .section{
@@ -62,32 +80,13 @@ background:var(--white);
 border-radius:20px;
 padding:25px 20px;
 margin-bottom:20px;
-box-shadow:0 8px 30px rgba(142, 36, 170, 0.1); /* ปรับเงาให้เป็นโทนม่วงนุ่มๆ */
+box-shadow:0 8px 30px rgba(142, 36, 170, 0.1);
 border:2px solid var(--main);
+backdrop-filter: blur(2px); /* เพิ่มความฟุ้งให้พื้นหลัง section */
 }
 
 h1,h2,h3{color:var(--dark);}
 .center{text-align:center;}
-
-/* --- LOGO: เพิ่มความฟุ้งรอบโลโก้ (Logo Aura) --- */
-.logo {
-width:150px;height:150px;
-border-radius:50%;
-overflow:hidden;
-margin:0 auto 20px;
-/* สร้างออร่าเรืองแสงหลายชั้น */
-box-shadow: 
-    0 0 20px var(--glow), 
-    0 0 40px rgba(206,147,216,0.3), 
-    0 0 10px #fff; 
-position: relative;
-animation: logoGlow 3s infinite alternate; /* เพิ่มอนิเมชั่นเรืองแสงวูบวาบ */
-}
-
-@keyframes logoGlow {
-0% { box-shadow: 0 0 20px var(--glow), 0 0 10px #fff; }
-100% { box-shadow: 0 0 40px var(--main), 0 0 15px #fff, 0 0 5px var(--glow); }
-}
 
 .logo img{width:100%;height:100%;object-fit:cover;}
 
@@ -117,27 +116,23 @@ text-decoration:none;
 margin-top:15px;
 font-weight:500;
 transition: all 0.3s ease;
-position: relative;
 }
 
-/* --- ANIMATIONS: คงเดิม --- */
-
-/* 1. ปุ่มเช็คคิวงานกระพริบ (Blinking) */
+/* 1. ปุ่มเช็คคิวงานกระพริบ */
 .btn-outline{
 background:#fff;
 border:2px dashed var(--main);
 color:var(--dark);
 animation: blink-status 2s infinite ease-in-out;
-box-shadow: 0 0 5px var(--glow);
 }
 
 @keyframes blink-status {
 0% { opacity: 1; box-shadow: 0 0 5px var(--glow); }
-50% { opacity: 0.6; box-shadow: 0 0 20px var(--main); transform: scale(1.02); }
+50% { opacity: 0.6; box-shadow: 0 0 20px var(--main); }
 100% { opacity: 1; box-shadow: 0 0 5px var(--glow); }
 }
 
-/* 2. ปุ่มสั่นตอนกด (Shake on click/active) */
+/* 2. ปุ่มสั่นตอนกด */
 .btn:active {
 animation: shake-btn 0.3s ease-in-out;
 }
@@ -149,8 +144,6 @@ animation: shake-btn 0.3s ease-in-out;
 75% { transform: translateX(-3px); }
 100% { transform: translateX(0); }
 }
-
-/* ------------------ */
 
 .btn-main{
 background:var(--main);
@@ -223,70 +216,66 @@ border:1px solid #f3e5f5;
 </head>
 
 <body>
+    <div class="bg-emojis">
+        <div class="bg-item" style="left: 10%; animation-delay: 0s;">🐇</div>
+        <div class="bg-item" style="left: 30%; animation-delay: 2s;">🌷</div>
+        <div class="bg-item" style="left: 50%; animation-delay: 4s;">🍎</div>
+        <div class="bg-item" style="left: 70%; animation-delay: 1s;">🐇</div>
+        <div class="bg-item" style="left: 90%; animation-delay: 3s;">🌷</div>
+        <div class="bg-item" style="left: 20%; animation-delay: 5s;">🍎</div>
+        <div class="bg-item" style="left: 80%; animation-delay: 6s;">🐇</div>
+    </div>
+
 <div class="container">
 
 <div class="section center" style="border:none;box-shadow:none;background:transparent;">
-
 <div class="logo">
 <img src="att.ludVxzgARDuIT8UH2-Ap4VAE5Hh3LLnqLwb0Uq9i3i4.png.jpeg" alt="i 'mizu logo">
 </div>
-
-<h1>i 'mizu</h1>
+<h1>i 'mizu 🐇</h1>
 <p style="color:var(--dark);opacity:.8;margin:10px 0 20px;">
-ม่วงชมพู พาสเทล แฟนตาซี ✨
+ม่วงชมพู พาสเทล แฟนตาซี 🌷🍎
 </p>
-
 <div class="badges">
 <div class="badge">🎨 ป้ายเติมเกม</div>
 <div class="badge">📜 ป้ายกฎร้าน</div>
 <div class="badge">💳 ป้ายบัญชี</div>
 </div>
-
-<a href="#" class="btn btn-outline">
-เช็คคิวงาน (เรท 2-3 วัน) ⏳
-</a>
+<a href="#" class="btn btn-outline">เช็คคิวงาน (เรท 2-3 วัน) ⏳</a>
 </div>
 
 <div class="section">
-<h2>📋 ขั้นตอนการสั่ง</h2>
-
-<div class="step"><div class="step-num">1</div><div>เลือกบรีฟงาน/ธีมตัวอย่าง</div></div>
-<div class="step"><div class="step-num">2</div><div>เลือกตัวละครที่จะใส่</div></div>
+<h2>📋 ขั้นตอนการสั่ง 🌷</h2>
+<div class="step"><div class="step-num">1</div><div>เลือกบรีฟงาน/ธีมตัวอย่าง 🍎</div></div>
+<div class="step"><div class="step-num">2</div><div>เลือกตัวละครที่จะใส่ 🐇</div></div>
 <div class="step"><div class="step-num">3</div><div>พิมพ์รายละเอียดข้อมูลป้าย</div></div>
 <div class="step"><div class="step-num">4</div><div>ชำระมัดจำ 50% รอนัดคิว</div></div>
 <div class="step"><div class="step-num">5</div><div>รับงานทางอีเมล/ช่องทางติดต่อ</div></div>
-
 <a href="#" class="btn btn-main">⭐️ ดูตัวอย่างงานคลิก</a>
 </div>
 
 <div class="section">
-<h2>📍 กฎและเงื่อนไข</h2>
-
+<h2>📍 กฎและเงื่อนไข 🍎</h2>
 <div class="price-row"><span>แก้ไขงานฟรี (ไม่เกิน 2 ครั้ง)</span><span class="price-tag">ฟรี</span></div>
 <div class="price-row"><span>แก้ไขครั้งที่ 3 เป็นต้นไป</span><span class="price-tag">+40฿</span></div>
 <div class="price-row"><span>คิวเร่งด่วนพิเศษ</span><span class="price-tag">+20฿</span></div>
 <div style="font-size: 13px; color: var(--dark); margin-top: 10px; line-height: 1.6;">
-    * CC งานไม่คืนเงินมัดจำ 50%<br>
-    * ร้านเปิด 09:00 - 23:00 น.<br>
-    * งดดันแชท (ตอบจากล่างสุด)
+    * CC งานไม่คืนเงินมัดจำ 50% 🌷<br>
+    * ร้านเปิด 09:00 - 23:00 น. 🐇<br>
+    * งดดันแชท (ตอบจากล่างสุด) 🍎
 </div>
-
 <a href="#" class="btn btn-main">อ่านกฎร้านเพิ่มเติม</a>
 </div>
 
 <div class="footer">
 <p style="margin-bottom: 10px; color: var(--dark); font-weight: 500;">รีวิวหลังจบงาน ลด 20.- ในงานถัดไป 🎀</p>
-<a href="tel:0638316584" class="btn btn-main">ติดต่อ Alisa (063-831-6584)</a>
-
+<a href="tel:0638316584" class="btn btn-main">ติดต่อ Alisa 🐇🌷</a>
 <div class="socials">
 <a href="#">Facebook</a>
 <a href="#">Instagram</a>
 <a href="#">LINE</a>
 </div>
-
-<p class="small">
-© 2026 i 'mizu Store
-</p>
+<p class="small">© 2026 i 'mizu Store 🐇🌷🍎</p>
 </div>
 
 </div>
