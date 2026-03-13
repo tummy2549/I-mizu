@@ -78,37 +78,39 @@ border-radius:25px;
 text-decoration:none;
 margin-top:15px;
 font-weight:500;
-transition: transform 0.2s; /* เพิ่ม transition สำหรับการกด */
+transition: all 0.3s ease;
 }
 
-/* --- ANIMATIONS START --- */
-/* 1. ปุ่มเช็คคิวงานกระพริบ */
-.btn-outline {
+/* --- เพิ่มส่วน Animation ตรงนี้ --- */
+
+/* 1. ปุ่มเช็คคิวงานกระพริบ (Blinking) */
+.btn-outline{
 background:#fff;
 border:2px dashed var(--main);
 color:var(--dark);
-animation: blink-border 1.5s infinite;
+animation: blink-status 2s infinite ease-in-out;
 }
 
-@keyframes blink-border {
+@keyframes blink-status {
 0% { opacity: 1; box-shadow: 0 0 0px var(--glow); }
-50% { opacity: 0.7; box-shadow: 0 0 15px var(--main); }
+50% { opacity: 0.6; box-shadow: 0 0 15px var(--main); transform: scale(1.02); }
 100% { opacity: 1; box-shadow: 0 0 0px var(--glow); }
 }
 
-/* 2. ปุ่มอื่นๆ สั่นเบาๆ ตอนกด */
+/* 2. ปุ่มสั่นตอนกด (Shake on click/active) */
 .btn:active {
-animation: shake 0.3s ease-in-out;
+animation: shake-btn 0.3s ease-in-out;
 }
 
-@keyframes shake {
+@keyframes shake-btn {
 0% { transform: translateX(0); }
-25% { transform: translateX(-2px) rotate(-1deg); }
-50% { transform: translateX(2px) rotate(1deg); }
-75% { transform: translateX(-2px); }
+25% { transform: translateX(-3px) rotate(-1deg); }
+50% { transform: translateX(3px) rotate(1deg); }
+75% { transform: translateX(-3px); }
 100% { transform: translateX(0); }
 }
-/* --- ANIMATIONS END --- */
+
+/* ----------------------------- */
 
 .btn-main{
 background:var(--main);
